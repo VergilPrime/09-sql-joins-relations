@@ -44,7 +44,7 @@ app.post('/articles', (request, response) => {
   // TODONE: In the provided array, add the author and "authorUrl" as data for the SQL query.
   client.query(
     `INSERT INTO authors(author, "authorUrl")
-    VALUES ($2, $3)
+    VALUES ($1, $2)
     ON CONFLICT DO NOTHING`,
     [
       request.body.author,
