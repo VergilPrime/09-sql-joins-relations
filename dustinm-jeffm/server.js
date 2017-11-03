@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 3000;
 const app = express();
 // TODONE: Don't forget to set your own conString.
-const conString = 'postgres://postgres:serendipity@mc.angels-reach.net:12888/postgres';
+const conString = 'postgres://postgres:password@mc.angels-reach.net:12888/postgres';
 const client = new pg.Client(conString);
 client.connect();
 client.on('error', error => {
@@ -86,7 +86,7 @@ app.post('/articles', (request, response) => {
         request.body.title,
         request.body.category,
         request.body.publishedOn,
-        request.body.body,
+        request.body.body
       ],
       function(err) {
         if (err) console.error(err);
@@ -97,11 +97,11 @@ app.post('/articles', (request, response) => {
 });
 
 app.put('/articles/:id', function(request, response) {
-  // TODO: Write a SQL query to update an author record. Remember that our articles now have an author_id property, so we can reference it from the request.body.
-  // TODO: In the provided array, add the required values from the request as data for the SQL query to interpolate.
+  // TODONE: Write a SQL query to update an author record. Remember that our articles now have an author_id property, so we can reference it from the request.body.
+  // TODONE: In the provided array, add the required values from the request as data for the SQL query to interpolate.
   client.query(
     `UPDATE authors
-    SET $1=author, $2=authorUrl
+    SET author=$1, "authorUrl"=$2
     WHERE author_id=$3`,
     [
       response.body.author,
@@ -110,11 +110,20 @@ app.put('/articles/:id', function(request, response) {
     ]
   )
     .then(() => {
-    // TODO: Write a SQL query to update an article record. Keep in mind that article records now have an author_id, in addition to title, category, publishedOn, and body.
-    // TODO: In the provided array, add the required values from the request as data for the SQL query to interpolate.
+    // TODONE: Write a SQL query to update an article record. Keep in mind that article records now have an author_id, in addition to title, category, publishedOn, and body.
+    // TODONE: In the provided array, add the required values from the request as data for the SQL query to interpolate.
       client.query(
-        ``,
-        []
+        `UPDATE articles
+         WHERE article_id IS $1
+         SET author_id=$2, title=$3, category=$4, "publishedOn"=$5, body=$6`,
+        [
+          request.params.id,
+          request.body.author_id,
+          request.body.title,
+          request.body.category,
+          request.body.publishedOn,
+          request.body.body
+        ]
       )
     })
     .then(() => {
